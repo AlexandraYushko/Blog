@@ -22,7 +22,7 @@ public class AnswerDAO {
             PreparedStatement statement = connection.prepareStatement(INSERT_ANSWER)) {
             statement.setString(1, answer.getAnswer());
             statement.setBoolean(2, answer.isCorrect());
-            statement.setInt(3, answer.getQuestion_id());
+            statement.setInt(3, answer.getQuestionId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,22 +50,24 @@ public class AnswerDAO {
         }
     }
 
-    public List<Answer> getAllAnswer(int questionId) throws SQLException {
-        Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SELECT_ANSWER);
-        statement.setInt(1, questionId);
-        ResultSet resultSet = statement.executeQuery();
+    public List<Answer> getAllAnswer(int questionId) {
+        try (Connection connection = DBConnection.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ANSWER)) {
 
-        List<Answer> answers = new ArrayList<>();
-        while(resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String answer = resultSet.getString("answer");
-            Boolean isCorrect = resultSet.getBoolean("is_correct");
-            Answer answer1 = new Answer(id, questionId, answer, isCorrect);
-            answers.add(answer1);
+            statement.setInt(1, questionId);
+            ResultSet resultSet = statement.executeQuery();
+
+            List<Answer> answers = new ArrayList<>();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String answer = resultSet.getString("answer");
+                Boolean isCorrect = resultSet.getBoolean("is_correct");
+                Answer answer1 = new Answer(id, questionId, answer, isCorrect);
+                answers.add(answer1);
+            }
+            return answers;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        resultSet.close();
-        statement.close();
-        return answers;
     }
 }

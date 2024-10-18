@@ -16,7 +16,7 @@ public class QuestionsDAO {
         try (Connection connection = DBConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_QUESTION)) {
             statement.setString(1, questions.getQuestion());
-            statement.setInt(2, questions.getId());
+            statement.setInt(2, questions.getServeyId());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

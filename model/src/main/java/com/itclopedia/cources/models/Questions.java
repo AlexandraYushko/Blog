@@ -1,12 +1,23 @@
 package com.itclopedia.cources.models;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class Questions {
     private int id;
-    private int serve_id;
+    private int serveyId;
     private String question;
+
+    public int getId() {
+        return id;
+    }
+
+    public int getServeyId() {
+        return serveyId;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

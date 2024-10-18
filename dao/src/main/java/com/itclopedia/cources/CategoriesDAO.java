@@ -23,20 +23,23 @@ public class CategoriesDAO {
     }
 
     public void deleteCategory(int id) throws SQLException {
-        Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(DELETE_CATEGORY);
-        statement.setInt(1, id);
-        statement.executeUpdate();
-        statement.close();
+        try (Connection connection = DBConnection.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_CATEGORY)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void updateCategory(Categories categories) throws SQLException {
-        Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(UPDATE_CATEGORY);
-        statement.setString(1, categories.getName());
-        statement.setInt(2, categories.getId());
-        statement.executeUpdate();
-        statement.close();
+        try (Connection connection = DBConnection.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_CATEGORY)) {
+            statement.setString(1, categories.getName());
+            statement.setInt(2, categories.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-
 }

@@ -15,7 +15,7 @@ public class ServeysDAO {
     public void addServeys(Serveys serveys) {
         try (Connection connection = DBConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_SERVEYS)) {
-            //statement.setString(1, serveys.getDescription());
+            statement.setString(1, serveys.getDescription());
             statement.setString(2, serveys.getQuestion());
             statement.setString(3, serveys.getType());
             statement.executeUpdate();
@@ -27,7 +27,7 @@ public class ServeysDAO {
     public void updateServeys(Serveys serveys) {
         try (Connection connection = DBConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_SERVEYS)) {
-            //statement.setString(1, serveys.getDescription());
+            statement.setString(1, serveys.getDescription());
             statement.setString(2, serveys.getQuestion());
             statement.setString(3, serveys.getType());
             statement.executeUpdate();

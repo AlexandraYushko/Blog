@@ -10,16 +10,15 @@ import java.util.List;
 public class ArticlesDAO {
     private static final String INSERT_ARTICLE = "INSERT INTO ARTICLES (AUTHOR_ID, CATEGORY_ID, " +
             "CONTENT, PREMIUM, TITLE, PUBLICATIONTIME) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
-    private static final String UPDATE_ARTICLE = "UPDATE ARTICLES SET TITLE = ?, CONTENT = ?, " +
-            "CATEGORY_ID = ?";
+    private static final String UPDATE_ARTICLE = "UPDATE ARTICLES SET TITLE = ?, CONTENT = ?, CATEGORY_ID = ?";
     private static final String DELETE_ARTICLE = "DELETE FROM ARTICLES WHERE ID = ?";
     private static final String SELECT_ARTICLE = "SELECT  *  FROM ARTICLES";
 
     public void addArticle(Articles articles) {
         try (Connection connection = DBConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_ARTICLE)) {
-            statement.setInt(1, articles.getAuthor_id());
-            statement.setInt(2, articles.getCategory_id());
+            statement.setInt(1, articles.getAuthorId());
+            statement.setInt(2, articles.getCategoryId());
             statement.setString(3, articles.getContent());
             statement.setBoolean(4, articles.isPremium());
             statement.setString(5, articles.getTitle());
@@ -32,7 +31,7 @@ public class ArticlesDAO {
     public void updateArticle(Articles articles) {
         try (Connection connection = DBConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_ARTICLE)) {
-            statement.setInt(1, articles.getCategory_id());
+            statement.setInt(1, articles.getCategoryId());
             statement.setString(2, articles.getTitle());
             statement.setString(3, articles.getContent());
             statement.executeUpdate();
@@ -73,30 +72,5 @@ public class ArticlesDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public List<Articles> findArticlesByTag(String tagName) throws SQLException {
-        Connection connection = DBConnection.getInstance().getConnection();
-        String sql = "SELECT DISTINCT a.* FROM articles a " +
-                "JOIN post_tag pt ON a.id = pt.article_id " +
-                "JOIN tags t ON pt.tag_id = t.id " +
-                "WHERE t.name = ?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, tagName);
-        ResultSet resultSet = statement.executeQuery();
-
-        List<Articles> articles = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String title = resultSet.getString("title");
-            String content = resultSet.getString("content");
-            int authorId = resultSet.getInt("author_id");
-            int categoryId = resultSet.getInt("category_id");
-            boolean premium = resultSet.getBoolean("premium");
-            Timestamp publicationTime = resultSet.getTimestamp("publicationTime");
-            Articles articles1 = new Articles(id, title, content, authorId, categoryId, premium, publicationTime);
-            articles.add(articles1);
-        }
-        return articles;
     }
 }

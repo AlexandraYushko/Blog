@@ -30,10 +30,10 @@ public class UserDAO {
     public User getUser(int id) {
         User user = null;
         try (Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SELECT_USER_BY_ID)) {
+             PreparedStatement statement = connection.prepareStatement(SELECT_USER_BY_ID)) {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            if(resultSet.next()) {
+            if (resultSet.next()) {
                 String name = resultSet.getString("NAME");
                 String email = resultSet.getString("EMAIL");
                 String pass = resultSet.getString("PASSWORD");

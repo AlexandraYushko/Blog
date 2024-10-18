@@ -19,8 +19,8 @@ public class CommentsDAO {
     public void addComments(Comments comments) {
         try (Connection connection = DBConnection.getInstance().getConnection();
              PreparedStatement statement = connection.prepareStatement(INSERT_COMMENT)) {
-            statement.setInt(1, comments.getArticle_id());
-            statement.setInt(2, comments.getAuthor_id());
+            statement.setInt(1, comments.getArticleId());
+            statement.setInt(2, comments.getAuthorId());
             statement.setString(3, comments.getText());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -48,22 +48,23 @@ public class CommentsDAO {
         }
     }
 
-    public List<Comments> getAllComments(int articleId) throws SQLException {
-        Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement(SELECT_COMMENT);
-        statement.setInt(1, articleId);
-        ResultSet resultSet = statement.executeQuery();
+    public List<Comments> getAllComments(int articleId) {
+        try (Connection connection = DBConnection.getInstance().getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_COMMENT)) {
+            statement.setInt(1, articleId);
+            ResultSet resultSet = statement.executeQuery();
 
-        List<Comments> comments = new ArrayList<>();
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            int authorId = resultSet.getInt("author_id");
-            String text = resultSet.getString("text");
-            Comments comment = new Comments(id, authorId, articleId, text);
-            comments.add(comment);
+            List<Comments> comments = new ArrayList<>();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int authorId = resultSet.getInt("author_id");
+                String text = resultSet.getString("text");
+                Comments comment = new Comments(id, authorId, articleId, text);
+                comments.add(comment);
+            }
+            return comments;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        resultSet.close();
-        statement.close();
-        return comments;
     }
 }
